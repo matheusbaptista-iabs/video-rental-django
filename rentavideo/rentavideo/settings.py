@@ -56,13 +56,14 @@ ROOT_URLCONF = 'rentavideo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/' )],
+        'DIRS': [os.path.join(BASE_DIR, 'www/templates/' )],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -117,9 +118,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'photos')
-MEDIA_URL = '/templates/photos/'
+STATIC_URL = 'statics/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics/')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'www/statics')
+]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www/statics/media/')
+MEDIA_URL = '/media/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
