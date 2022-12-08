@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-    {% block body %}
+    {% comment %} {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -29,25 +29,12 @@
                     {% endfor %}
                 </h4>
                 <h6>{{ object.description }}</h6>
-
-                <h6>
-                    {% for actors in object.actor.all %} 
-                        {{ actors }}
-                    {% endfor %}
-                </h6>
-                
-                {% if object.is_item_available <= 0 %}
-                    <div class="card-text">No item available</div>
-                {% else %}
-                    <a class="btn btn-warning" href="{% url 'films:rent' %}">Rent</a>
-                {% endif %}
-
-                {{ object.verify_stock }}
-                {{ object.is_item_available }}
+                <h6>{% for actors in object.actor.all %} {{ actors }}{% endfor %}</h6>
+                <a class="btn btn-warning" href="#">Rent</a>
             </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+    {% endblock %} {% endcomment %}
 </body>
 </html>

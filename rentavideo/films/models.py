@@ -1,5 +1,7 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
+from clients.models import Client
+#import pdb
 
 
 # Create your models here.
@@ -71,6 +73,12 @@ class Film(models.Model):
         today_date = datetime.today()
         is_released = True if (today_date - release_date).days <= 180 else False
         return is_released
+    
+    def verify_stock(self):  
+        return Item.objects.filter(film_id=self.id).count()
+    
+    def is_item_available(self):
+        return Item.objects.filter(film_id=self.id, item_state__available=True).count()
 
 
 class Item(models.Model):
@@ -83,10 +91,105 @@ class Item(models.Model):
     def __str__(self):
         return '%s - %s' % (self.film.original_title, self.bar_code)
     
+    
     def calculate_rental_price(self):
         rental_price = self.media_type.rental_price
 
         if self.film.is_released():
-            rental_price = rental_price * 1.5
+            rental_price = rental_price * 1.5            
 
         return rental_price 
+    
+    
+class Rent(models.Model):
+    
+    def __str__(self):
+        return '%s - %s - %s' % (self.client, self.film.original_title, self.item.bar_code) 
+    
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    date_rent = models.DateTimeField(datetime.now())
+    actual_return = models.DateTimeField()
+    rental_count = models.IntegerField()
+
+    
+    def calculate_final_rental_price(self):
+   
+        rental_count = self.rental_count * 3
+        predicted_return = self.date_rent + timedelta(rental_count)
+        # valor de fato
+
+        if (self.actual_date - self.date_rent).days <= self.rental_count:
+            print(5 * self.rental_count * self.item.calculate_rental_price)
+
+        else:     
+            print(10 * self.rental_count * self.item.calculate_rental_price)
+        
+        return self.calculate_final_rental_price
+        
+        
+        # if date_diff <= 0:
+        #     return 10 * self.rental_count * self.item.calculate_rental_price
+        
+        # else:
+            
+        
+        
+        
+        
+        
+        
+
+        # if self.rental_count % 3 == 0:    
+        #     return 10 * self.rental_count * self.item.calculate_rental_price
+    
+        # elif self.rental_count % 3 != 0 and self.rental_count > 3:
+        #     return 15 * self.rental_count * self.item.calculate_rental_price
+        
+        # else:
+        #     return 8 * self.rental_count * self.item.calculate_rental_price
+            
+        
+            
+            
+            
+            
+            
+            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    #     rental_price = self.item.media_type.rental_price
+
+    #     if self.item.calculate_rental_price():
+    #         rental_price = rental_price * 1.5
+            
+    #         if (date_return - date_rent).days / 3:
+    #             return rental_price * 10 * (date_return - date_rent).days / 3
+            
+    #         predicted_return_date = abs((date_return - date_rent).days)
+    #         return_date = rental_price * new_rental_count
+            
+    #     else:
+            
+            
+
+    #     return rental_price 
+        
+        
+        
+      
+    
+    # def is_delaied(...) #multa

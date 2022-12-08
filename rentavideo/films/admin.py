@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Film, MediaType, Studio, ItemState, Director, Actor, Language, Genre, Item
+from .models import Film, MediaType, Studio, ItemState, Director, Actor, Language, Genre, Item, Rent
 # Register your models here.
 
 admin.site.register(Film)
@@ -11,3 +11,4 @@ admin.site.register(Actor)
 admin.site.register(Language)
 admin.site.register(Genre)
 admin.site.register(Item)
+admin.site.register(Rent)

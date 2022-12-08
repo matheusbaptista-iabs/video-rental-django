@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView
 # Create your views here.
 
 class CreateClient(CreateView):
-    model = Client;
-    fields = ['username', 'first_name', 'last_name', 'email', 'cep', 'address', 'cpf', 'phone', 'birth']
+    model = Client
+    fields = ['username', 'first_name', 'last_name', 'email', 'cep', 'address', 'cpf', 'phone', 'birth', 'active']
     template_name: 'clients/client-form.html'
+

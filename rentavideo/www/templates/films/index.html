@@ -32,19 +32,17 @@
 
 
         <div class="row">
-            {% for film in film_objects %}
+            {% for film in object_list %}
             <div class="col-md-3">
-                <img src="{{ object.image.url }}" height="250px" class="card-img-top img-thumbnail">
+                <img src="{{ film.image.url }}" height="250px" class="card-img-top img-thumbnail">
                 <div class="card-body">
                     <div class="card-title">
-                        {{ object.original_title }}
+                        {{ film.original_title }}
                     </div>
-                    <div class="card-text">
-                        ${{ film.price }}
-                    </div> 
+    
 
-                    <a class="btn btn-warning" href="{% url 'films:detail' object.id %}">View</a>
-                    <a class="btn btn-warning" href="#">Rent</a>
+                    <a class="btn btn-warning" href="{% url 'films:detail' film.id %}">View</a>
+                    <a class="btn btn-warning" href="{% url 'films:rent' film.id %}">Rent</a>
                     
                 </div>
             </div>
@@ -52,23 +50,23 @@
         </div>
 
 
-        <nav aria-label="Page navigation">
+        {% comment %} <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                {% if film_objects.has_previous %}
+                {% if film.has_previous %}
               <li class="page-item">                
-                <a class="page-link" href="?page={{ film_objects.previous_page_number }}">Previous</a>
+                <a class="page-link" href="?page={{ film.previous_page_number }}">Previous</a>
               </li>
               {% endif %}
               
               <li class="page-item activate" aria-current="page"><a class="page-link" href="?page={{ film_objects.number }}">{{ film_objects.number }}</a></li>
 
-              {% if film_objects.has_next %}
+              {% if film_objec.has_next %}
               <li class="page-item">
                 <a class="page-link" href="?page={{ film_objects.next_page_number }}">Next</a>
               </li>
               {% endif %}
             </ul>
-          </nav>
+          </nav> {% endcomment %}
 
 
     </div>

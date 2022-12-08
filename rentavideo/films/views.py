@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from films.models import Film
-from films.forms import FilmForm
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from films.models import Film, Rent
+from films.forms import FilmForm, RentalFilmForm, RentalReturnFilmForm
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, FormView
 
 # Create your views here.
 
@@ -58,4 +58,17 @@ class DeleteFilm(DeleteView):
     model = Film
     form_class = FilmForm
     template_name = 'films/delete.html'
+    success_url = 'films/index.html'
+    
+    
+class RentFilm(FormView):
+    model = Rent
+    form_class = RentalFilmForm
+    template_name = 'films/rent.html'
+    success_url = 'films/index.html'
+    
+class ReturnFilm(FormView):
+    model = Rent
+    form_class = RentalReturnFilmForm
+    template_name = 'films/return.html'
     success_url = 'films/index.html'
