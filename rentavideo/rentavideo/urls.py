@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('films/', include("films.urls", namespace="films")),
+    path('clients/', include("clients.urls", namespace="clients")),
 ]
 #pdb.set_trace()
 if settings.DEBUG:

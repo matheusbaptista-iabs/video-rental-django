@@ -108,9 +108,8 @@ class Rent(models.Model):
     
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-    date_rent = models.DateTimeField(datetime.now())
-    actual_return = models.DateTimeField()
-    rental_count = models.IntegerField()
+    date_rent = models.DateTimeField(default=datetime.now())
+    actual_return = models.DateTimeField(default=datetime.now())
 
     
     def calculate_final_rental_price(self):

@@ -1,11 +1,19 @@
 from django.shortcuts import render
-from clients.models import Client
-from django.views.generic.edit import CreateView
+from .models import Client, User
+from .forms import ClientForm, ClientRegisterForm
+from django.views.generic import FormView
 
 # Create your views here.
 
-class CreateClient(CreateView):
+class CreateClient(FormView):
+    model = User
+    form_class = ClientRegisterForm
+    template_name = 'clients/register.html'
+    success_url = 'films/details.html'
+    
+class DetailsClient(FormView):
     model = Client
-    fields = ['username', 'first_name', 'last_name', 'email', 'cep', 'address', 'cpf', 'phone', 'birth', 'active']
-    template_name: 'clients/client-form.html'
+    form_class = ClientForm
+    template_name = 'clients/details.html'
+    success_url = 'films/index.html'
 

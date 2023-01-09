@@ -39,7 +39,7 @@
                 {% if object.is_item_available <= 0 %}
                     <div class="card-text">No item available</div>
                 {% else %}
-                    <a class="btn btn-warning" href="{% url 'films:rent' %}">Rent</a>
+                    <a class="btn btn-warning" href="{% url 'films:rent' object.id %}">Rent</a>
                 {% endif %}
 
                 {{ object.verify_stock }}

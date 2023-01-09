@@ -9,7 +9,7 @@ class FilmForm(forms.ModelForm):
 class RentalFilmForm(forms.ModelForm):
     class Meta:
       model = Rent
-      fields = ['client', 'item', 'date_rent', 'rental_count']
+      fields = ['client', 'item', 'date_rent']
       
 class RentalReturnFilmForm(forms.ModelForm):
   class Meta:
