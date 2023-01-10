@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header text-white bg-info">
+                    <div class="card-title">
+                        Login into your account!
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        {{ form|crispy }}
+                    </p>
+                        <button class="btn-info" type="submit" href="{% url 'films:index' %}">Save</button>
+                    </form>
+                </p>
+                    <div class="border-top pt-3">
+                        <small class="text-muted">Need an account? <a class="ml-2" href="{% url 'clients:register' %}">Sign up</a> </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

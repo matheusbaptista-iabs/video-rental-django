@@ -6,6 +6,8 @@ app_name = "clients"
 urlpatterns = [
     
     path('register', views.CreateClient.as_view(), name='register'),
-    path('details', views.DetailsClient.as_view(), name='details'),
+    path('details/<username>/', views.DetailsClient.as_view(), name='details'),
+    path('login', views.LoginClient.as_view(), name='login'),
+
     
    ]
