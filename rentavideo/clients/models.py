@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class Client(models.Model):
     def __str__(self):
-        return self.user
+        return self.username
 
     username = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     first_name = models.CharField(max_length=100)

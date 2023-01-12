@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from .models import Client, User
-from .forms import ClientForm, ClientRegisterForm
+from .models import User
+from .forms import ClientRegisterForm
 from django.views.generic import FormView
-from django.contrib.auth.views import LoginView
-from django.views.generic import UpdateView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
+from django.urls import reverse
 
 # Create your views here.
 
@@ -13,19 +13,25 @@ class CreateClient(FormView):
     model = User
     form_class = ClientRegisterForm
     template_name = 'clients/register.html'
-    success_url = 'clients/details.html'
     
-class DetailsClient(UpdateView):
-    model = Client
-    form_class = ClientForm
-    pk_url_kwarg = 'pk' 
-    template_name = 'clients/details.html'
-    success_url = 'films/index.html'
-
-
+    def get_success_url(self):
+        return reverse('clients:login')
+    
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    
 class LoginClient(LoginView):
     template_name = 'clients/login.html'
     success_url = 'films/index.html' 
+    
+    def get_success_url(self):
+        return reverse('films:index')
+    
+class LogoutClient(LogoutView):
+    template_name = 'clients/logout.html'
+    success_url = 'clients/login.html' 
     
     
     

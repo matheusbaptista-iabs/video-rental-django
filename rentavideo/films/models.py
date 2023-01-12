@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime, timedelta
-from clients.models import Client
-#import pdb
+from clients.models import User
+import pdb
 
 
 # Create your models here.
@@ -91,6 +91,16 @@ class Item(models.Model):
     def __str__(self):
         return '%s - %s' % (self.film.original_title, self.bar_code)
     
+    def is_available(self):
+        if self.rented_item.exists():
+            is_available = False
+            if self.rented_item.last().actual_return:
+                is_available = True
+            else:
+                is_available = False
+        else:
+            is_available = True if self.item_state.name == 'Available' else False
+        return is_available
     
     def calculate_rental_price(self):
         rental_price = self.media_type.rental_price
@@ -104,10 +114,10 @@ class Item(models.Model):
 class Rent(models.Model):
     
     def __str__(self):
-        return '%s - %s - %s' % (self.client, self.film.original_title, self.item.bar_code) 
+        return '%s - %s - %s' % (self.username, self.film.original_title, self.item.bar_code) 
     
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name='rented_item')
     date_rent = models.DateTimeField(default=datetime.now())
     actual_return = models.DateTimeField(default=datetime.now())
 
@@ -120,7 +130,6 @@ class Rent(models.Model):
 
         if (self.actual_date - self.date_rent).days <= self.rental_count:
             print(5 * self.rental_count * self.item.calculate_rental_price)
-
         else:     
             print(10 * self.rental_count * self.item.calculate_rental_price)
         

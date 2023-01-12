@@ -44,6 +44,11 @@
 
                 {{ object.verify_stock }}
                 {{ object.is_item_available }}
+
+                {% for x in object.item_set.all %}
+                    <div>{{ x.is_available }}</div>
+                {% endfor %}
+                
             </div>
             </div>
         </div>

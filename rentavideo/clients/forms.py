@@ -10,8 +10,3 @@ class ClientRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
         
-
-class ClientForm(forms.ModelForm):
-    class Meta:
-        model = Client
-        fields = ['username', 'first_name', 'last_name', 'email', 'cep', 'address', 'cpf', 'phone', 'birth']

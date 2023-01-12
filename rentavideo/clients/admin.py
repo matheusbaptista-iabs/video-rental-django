@@ -3,3 +3,4 @@ from .models import Client
 
 
 admin.site.register(Client)
+
