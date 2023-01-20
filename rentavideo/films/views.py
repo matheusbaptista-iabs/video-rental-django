@@ -1,5 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from films.models import Film, Rent, Item
+from films.models import Film, Rent, Item, ItemState
 from films.forms import FilmForm, RentalFilmForm, RentalReturnFilmForm
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, FormView
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.urls import reverse
 class IndexFilm(ListView):
     model = Film
     template_name = 'films/index.html'
+
 
 
 class DetailFilm(DetailView):
@@ -53,7 +55,7 @@ class UpdateFilm(UpdateView):
         self.object = form.save(commit=False)
         self.object.save()
         return super().form_valid(form)
-    
+
 
 class DeleteFilm(DeleteView):
     model = Film
@@ -67,8 +69,30 @@ class RentFilm(CreateView):
     form_class = RentalFilmForm
     template_name = 'films/rent.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(film=self.kwargs.get("pk"))
+        return kwargs
+
     def get_success_url(self):
         return reverse('films:index')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.film = self.object.item.film
+
+        item_to_rent = Item.objects.get(id=self.object.item.id)
+        item_to_rent.item_state = ItemState.objects.get(name='Rented')
+        item_to_rent.save()
+
+        #self.object.item.item_state.id = ItemState.objects.get(name='Rented').id
+        #self.object.save()
+        # self.object.item.item_state.save()
+        # a = Item.objects.get(id=self.object.item.id)
+        # a.item_state = ItemState.objects.get(name='Rented')
+        #a.save()
+        return super().form_valid(form) #HttpResponseRedirect(self.success_url)
     
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)

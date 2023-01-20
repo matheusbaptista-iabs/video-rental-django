@@ -8,15 +8,15 @@ class FilmForm(forms.ModelForm):
         
 class RentalFilmForm(forms.ModelForm):
 
-  def __init__(self, *args, **kwargs):
+  def __init__(self, *args, film=None, **kwargs):
     super(RentalFilmForm, self).__init__(*args, **kwargs)
     # Filter and display only the available films
-    self.fields['item'].queryset = Item.objects.filter(item_state=ItemState.objects.get(name='Available'))
+    self.fields['item'].queryset = Item.objects.filter(item_state=ItemState.objects.get(name='Available'), film_id=film)
 
  
   class Meta:
     model = Rent
-    fields = ['user', 'item', 'date_rent']
+    fields = ['item', 'date_rent']
       
     
 class RentalReturnFilmForm(forms.ModelForm):

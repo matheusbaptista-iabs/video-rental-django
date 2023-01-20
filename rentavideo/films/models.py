@@ -63,7 +63,7 @@ class Film(models.Model):
     image = models.ImageField()
     director = models.ManyToManyField(Director)
     actor = models.ManyToManyField(Actor)
-    language = models.ManyToManyField(Language) # escrever language
+    language = models.ManyToManyField(Language) # write language
     genre = models.ManyToManyField(Genre)
     studio = models.ForeignKey(Studio, on_delete=models.DO_NOTHING)
 
@@ -114,7 +114,7 @@ class Item(models.Model):
 class Rent(models.Model):
     
     def __str__(self):
-        return '%s - %s - %s' % (self.username, self.film.original_title, self.item.bar_code) 
+        return '%s - %s - %s' % (self.user, self.film.original_title, self.item.bar_code)
     
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name='rented_item')
