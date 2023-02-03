@@ -7,15 +7,16 @@
             <div class="card">
                 <div class="card-header text-white bg-info">
                     <div class="card-title">
-                        Return Film
+                        Update your account!
                     </div>
                 </div>
                 <div class="card-body">
-                    {% for rent in object_list %}
-                        <div>{{ rent.date_rent }} | {{ rent.actual_return }}</div>
-                    {% empty %}
-                        <div>No Result</div>
-                    {% endfor %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </p>
+                        <button class="btn-info" type="submit">Save</button>
+                    </form>
                 </div>
             </div>
         </div>

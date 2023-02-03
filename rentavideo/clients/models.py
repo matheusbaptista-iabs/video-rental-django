@@ -7,18 +7,15 @@ from django.contrib.auth.models import User
 
 class Client(models.Model):
     def __str__(self):
-        return self.username
+        return self.user.username
 
-    username = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     cep = models.CharField(max_length=100)
     address = models.CharField(max_length=150)
     cpf = models.CharField(unique=True, max_length=100)
     phone = models.CharField(max_length=100)
     birth = models.DateField()
-    active = models.BooleanField(default=True)
+
     
     
     

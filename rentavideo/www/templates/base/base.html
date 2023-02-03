@@ -36,7 +36,7 @@
           </div>
           <div class="navbar-nav pr-5">
               <span aria-current="page" class="navbar-text text-dark">
-                Welcome {{ user.username }}!
+                Welcome {{ user.get_full_name }}!
               </span>
               <a class="nav-item nav-link" href="{% url 'clients:logout' %}">Logout</a>
           </div>

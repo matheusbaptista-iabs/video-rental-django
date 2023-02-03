@@ -1,12 +1,14 @@
 from django.urls import path
-from clients import views
+from clients.views import *
 
 app_name = "clients"
 
 urlpatterns = [
-    
-    path('register', views.CreateClient.as_view(), name='register'),
-    path('login', views.LoginClient.as_view(), name='login'),
-    path('logout', views.LogoutClient.as_view(), name='logout'),
+    path('list/', ClientListView.as_view(), name='client_list'),
+    path('<int:pk>/', ClientDetailView.as_view(), name='client_detail'),
+    path('<int:pk>/update/', ClientUpdateView.as_view(), name='client_update'),
+    path('signup/', ClientSignUpView.as_view(), name='signup'),
+    path('login/', ClientLoginView.as_view(), name='login'),
+    path('logout/', LogoutClient.as_view(), name='logout'),
     
    ]

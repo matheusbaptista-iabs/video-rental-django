@@ -11,11 +11,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    {% for rent in object_list %}
-                        <div>{{ rent.date_rent }} | {{ rent.actual_return }}</div>
-                    {% empty %}
-                        <div>No Result</div>
-                    {% endfor %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn-info" type="submit">Return</button>
+                    </form>
                 </div>
             </div>
         </div>

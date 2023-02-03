@@ -1,5 +1,6 @@
 from django import forms
 from .models import Film, Rent, Item, ItemState, User
+import datetime
 
 class FilmForm(forms.ModelForm):
     class Meta:
@@ -11,7 +12,7 @@ class RentalFilmForm(forms.ModelForm):
   def __init__(self, *args, film=None, **kwargs):
     super(RentalFilmForm, self).__init__(*args, **kwargs)
     # Filter and display only the available films
-    self.fields['item'].queryset = Item.objects.filter(item_state=ItemState.objects.get(name='Available'), film_id=film)
+    self.fields['item'].queryset = Item.objects.filter(item_state=ItemState.objects.get(name='Available'), film=film)
 
  
   class Meta:
@@ -20,6 +21,18 @@ class RentalFilmForm(forms.ModelForm):
       
     
 class RentalReturnFilmForm(forms.ModelForm):
+
+  def __init__(self, *args, **kwargs):
+    super(RentalReturnFilmForm, self).__init__(*args, **kwargs)
+    self.initial['actual_return'] = datetime.datetime.now()
+
   class Meta:
     model = Rent
-    fields = ['item', 'actual_return']
+    widgets = {
+      'actual_return': forms.DateTimeInput(
+        attrs={'class': 'form-control', 'disabled': True})
+    }
+    fields = ['actual_return']
+    labels = {
+      'actual_return': 'Return Date',
+    }

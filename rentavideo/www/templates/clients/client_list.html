@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>Client List</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>CEP code</th>
+        <th>CPF</th>
+        <th>Birthday</th>
+        <th>Active</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in clients %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ client.phone }}</td>
+            <td>{{ client.address }}</td>
+          <td>{{ client.cep }}</td>
+          <td>{{ client.cpf }}</td>
+          <td>{{ client.birthday }}</td>
+          <td>{{ user.is_active }}</td>
+          <td><a href="{% url 'clients:client_detail' client.pk %}">View</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
