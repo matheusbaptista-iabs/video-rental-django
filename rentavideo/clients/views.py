@@ -67,11 +67,12 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientSignUpForm
     template_name = 'clients/update.html'
-    success_url = reverse_lazy('login')
+    #success_url = reverse_lazy('login')
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'clients/detail.html'
+    context_object_name = 'client'
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = User

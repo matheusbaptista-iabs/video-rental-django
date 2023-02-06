@@ -104,17 +104,9 @@ class RentFilm(CreateView):
 class RentedVideosByClientView(ListView):
     model = Rent
     template_name = 'films/rented_movies.html'
-    #context_object_name = 'videos'
-
 
     def get_queryset(self):
-        return Rent.objects.filter(user=self.request.user, actual_return=None)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['user'] = self.user
-    #     return context
-
+        return Rent.objects.filter(user=self.request.user)
 
 def calculate_rental_fee(rental):
     rental_period = timezone.now() - rental.date_rent
@@ -130,10 +122,6 @@ class ReturnMovieView(UpdateView):
     model = Rent
     form_class = RentalReturnFilmForm
     template_name = 'films/return_movie.html'
-
-    # def get_object(self, queryset=None):
-    #     rental = get_object_or_404(Rent, id=self.kwargs['rent_id'])
-    #     return rental
 
     def form_valid(self, form):
         rental = form.save(commit=False)

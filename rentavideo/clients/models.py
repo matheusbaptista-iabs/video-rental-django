@@ -9,7 +9,7 @@ class Client(models.Model):
     def __str__(self):
         return self.user.username
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, related_name='client_user')
     cep = models.CharField(max_length=100)
     address = models.CharField(max_length=150)
     cpf = models.CharField(unique=True, max_length=100)

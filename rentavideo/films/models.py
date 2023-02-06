@@ -114,7 +114,7 @@ class Item(models.Model):
 class Rent(models.Model):
     
     def __str__(self):
-        return '%s - %s - %s' % (self.user, self.film.original_title, self.item.bar_code)
+        return '%s - %s - %s' % (self.user, self.item.film.original_title, self.item.bar_code)
     
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name='rented_item')

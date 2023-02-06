@@ -14,12 +14,13 @@
                 {% if object_list %}
                     <div class="container">
                         <div class="row align-items-center">
-                            <div class="col">
+
+                            <div class="col-sm">
                                 {% for video in object_list %}
                                     <li>{{ video.item }}</li>
                             </div>
 
-                            <div class="col">
+                            <div class="col-sm">
                                 <a class="btn btn-warning" href="{% url 'films:return_movie' video.id %}">Return</a>
                             </div>
 

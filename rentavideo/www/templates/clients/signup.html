@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <form method="POST">
                         {% csrf_token %}
-                        {{ form|crispy }}
+                        {% crispy form %}
                         </br>
                         <button class="btn-info" type="submit">Save</button>
 
