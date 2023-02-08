@@ -1,6 +1,6 @@
 import datetime
 from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
 from .forms import ClientSignUpForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,7 +20,8 @@ class ClientSignUpView(CreateView):
     success_url = reverse_lazy('clients:login')
     
     def form_valid(self, form):
-        form.save(commit=False)
+
+        client = form.save(commit=False)
         user = User.objects.create_user(
             username=form.cleaned_data['username'],
             email=form.cleaned_data['email'],
@@ -29,17 +30,9 @@ class ClientSignUpView(CreateView):
             date_joined=datetime.datetime.now(),
             first_name=form.cleaned_data['first_name'],
             last_name=form.cleaned_data['last_name']
-            )
-
-        client = Client(
-            user=user,
-            cep=form.cleaned_data['cep'],
-            birth=form.cleaned_data['birth'],
-            address=form.cleaned_data['address'],
-            cpf=form.cleaned_data['cpf'],
-            phone=form.cleaned_data['phone'],
-            )
-
+        )
+        user.groups.add(Group.objects.filter(name='RENT_FILM').first())
+        client.user = user
         client.save()
         return HttpResponseRedirect(self.success_url)
     
@@ -47,6 +40,8 @@ class ClientSignUpView(CreateView):
 class ClientLoginView(LoginView):
     template_name = 'clients/login.html'
     success_url = reverse_lazy('films:index')
+
+    # def get_success_url(self):
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
@@ -58,16 +53,23 @@ class ClientLoginView(LoginView):
         return self.form_invalid(form)
 
 
-
-class LogoutClient(LogoutView):
-    template_name = 'clients/logout.html'
-    success_url = 'clients/login.html'
-
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientSignUpForm
     template_name = 'clients/update.html'
-    #success_url = reverse_lazy('login')
+    success_url = reverse_lazy('clients:login')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user.username = form.cleaned_data['username']
+        self.object.user.first_name = form.cleaned_data['first_name']
+        self.object.user.last_name = form.cleaned_data['last_name']
+        self.object.user.email = form.cleaned_data['email']
+        self.object.user.set_password(form.cleaned_data['password1'])
+        self.object.save()
+        self.object.user.save()
+        return HttpResponseRedirect(self.success_url)
+
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
@@ -85,22 +87,3 @@ class ClientListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
     
     
-    
-    
-    
-    
-    # def get(self, request):
-    #     form = self.form_class()
-    #     return render(request, self.template_name, context={'form':form})
-    
-    # def post(self, request):
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         user = authenticate(
-    #             username=form.cleaned_data['username'],
-    #             password=form.cleaned_data['password'],
-    #         )
-    #         if user is not None:
-    #             login(request, user)
-    #             return redirect('home')
-    #     return render(request, self.template_name, context={'form':form})

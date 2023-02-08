@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from datetime import datetime, timedelta
 from clients.models import User
@@ -119,66 +121,21 @@ class Rent(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name='rented_item')
     date_rent = models.DateTimeField(default=datetime.now())
-    actual_return = models.DateTimeField(default=datetime.now())
+    actual_return = models.DateTimeField(null=True, blank=True)
 
-    
-    def calculate_final_rental_price(self):
-   
-        rental_count = self.rental_count * 3
-        predicted_return = self.date_rent + timedelta(rental_count)
-        # valor de fato
+    def calculate_rental_fee(self):
+        rental_period = timezone.now() - self.date_rent
+        base_fee = 10
+        extra_fee = 2 * (rental_period.days - 3)
+        if extra_fee < 0:
+            extra_fee = 0
+        rental_fee = base_fee + extra_fee
+        return rental_fee
 
-        if (self.actual_date - self.date_rent).days <= self.rental_count:
-            print(5 * self.rental_count * self.item.calculate_rental_price)
-        else:     
-            print(10 * self.rental_count * self.item.calculate_rental_price)
-        
-        return self.calculate_final_rental_price
-        
-        
-        # if date_diff <= 0:
-        #     return 10 * self.rental_count * self.item.calculate_rental_price
-        
-        # else:
-            
-        
-        
-        
-        
-        
-        
 
-        # if self.rental_count % 3 == 0:    
-        #     return 10 * self.rental_count * self.item.calculate_rental_price
-    
-        # elif self.rental_count % 3 != 0 and self.rental_count > 3:
-        #     return 15 * self.rental_count * self.item.calculate_rental_price
-        
-        # else:
-        #     return 8 * self.rental_count * self.item.calculate_rental_price
-            
-        
-            
-            
-            
-            
-            
-            
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
     #     rental_price = self.item.media_type.rental_price
 
     #     if self.item.calculate_rental_price():

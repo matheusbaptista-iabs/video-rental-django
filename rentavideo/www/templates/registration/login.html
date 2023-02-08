@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header text-white bg-info">
+                    <div class="card-title">
+                        Login into your account!
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div id="div_id_username" class="form-group"> <label for="id_username" class=" requiredField">
+                Username<span class="asteriskField">*</span> </label> <div> <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" class="textinput textInput form-control" required="" id="id_username"> </div> </div> <div id="div_id_password" class="form-group"> <label for="id_password" class=" requiredField">
+                Password<span class="asteriskField">*</span> </label> <div> <input type="password" name="password" autocomplete="current-password" class="textinput textInput form-control" required="" id="id_password"> </div> </div>
+
+                    <p></p>
+                        <button class="btn-info" type="submit">Save</button>
+                    </form>
+                <p></p>
+                    <div class="border-top pt-3">
+                        <small class="text-muted">Need an account? <a class="ml-2" href="/clients/signup/">Sign up</a> </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

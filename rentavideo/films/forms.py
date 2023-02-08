@@ -18,6 +18,9 @@ class RentalFilmForm(forms.ModelForm):
   class Meta:
     model = Rent
     fields = ['item', 'date_rent']
+    labels = {
+      'date_rent': 'Date of Rental',
+    }
       
     
 class RentalReturnFilmForm(forms.ModelForm):
@@ -30,7 +33,7 @@ class RentalReturnFilmForm(forms.ModelForm):
     model = Rent
     widgets = {
       'actual_return': forms.DateTimeInput(
-        attrs={'class': 'form-control', 'disabled': True})
+        attrs={'class': 'form-control', 'readonly': True})
     }
     fields = ['actual_return']
     labels = {

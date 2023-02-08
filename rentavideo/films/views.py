@@ -1,11 +1,10 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.utils import timezone
-from django.shortcuts import get_object_or_404
+from datetime import datetime
 from films.models import Film, Rent, Item, ItemState
 from films.forms import FilmForm, RentalFilmForm, RentalReturnFilmForm
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, FormView
-from django.urls import reverse
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, FormView, TemplateView
+from django.urls import reverse, reverse_lazy
 
 # Create your views here.
 
@@ -15,10 +14,10 @@ class IndexFilm(ListView):
     context_object_name = 'videos'
 
 
-
 class DetailFilm(DetailView):
     model = Film
     template_name = 'films/detail.html'
+    pk_url_kwarg = 'pk_film'
 
 
 class CreateFilm(CreateView):
@@ -30,21 +29,6 @@ class CreateFilm(CreateView):
         self.object = form.save(commit=False)
         self.object.save()
         return super().form_valid(form)
-    
-    def get_success_url(self):
-        if self.success_url:
-            url = self.success_url.format(**self.object.__dict__)
-        else:
-            try:
-                url = self.object.get_absolute_url()
-            except AttributeError:
-                raise ImproperlyConfigured(
-                "No URL to redirect to.  Either provide a url or define"
-                " a get_absolute_url method on the Model."
-                )
-        return url
-
-    
     
 
 
@@ -67,18 +51,17 @@ class DeleteFilm(DeleteView):
     success_url = 'films/index.html'
     
     
-class RentFilm(CreateView):
+class RentFilm(PermissionRequiredMixin, CreateView):
     model = Rent
     form_class = RentalFilmForm
     template_name = 'films/rent.html'
+    success_url = reverse_lazy('films:index')
+    permission_required = 'films.add_rent'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update(film=Film.objects.filter(id=self.kwargs.get('pk_film')).first())
         return kwargs
-
-    def get_success_url(self):
-        return reverse('films:index')
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -89,70 +72,36 @@ class RentFilm(CreateView):
         item_to_rent.item_state = ItemState.objects.get(name='Rented')
         item_to_rent.save()
 
-        #self.object.item.item_state.id = ItemState.objects.get(name='Rented').id
-        #self.object.save()
-        # self.object.item.item_state.save()
-        # a = Item.objects.get(id=self.object.item.id)
-        # a.item_state = ItemState.objects.get(name='Rented')
-        #a.save()
-        return super().form_valid(form) #HttpResponseRedirect(self.success_url)
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context[]
+        self.object.save()
+
+        return HttpResponseRedirect(self.success_url)
+
 
 class RentedVideosByClientView(ListView):
     model = Rent
     template_name = 'films/rented_movies.html'
 
     def get_queryset(self):
-        return Rent.objects.filter(user=self.request.user)
-
-def calculate_rental_fee(rental):
-    rental_period = timezone.now() - rental.date_rent
-    base_fee = 10
-    extra_fee = 2 * (rental_period.days - 3)
-    if extra_fee < 0:
-        extra_fee = 0
-    rental_fee = base_fee + extra_fee
-    return rental_fee
+        return Rent.objects.filter(user=self.request.user, actual_return=None)
 
 
 class ReturnMovieView(UpdateView):
     model = Rent
     form_class = RentalReturnFilmForm
     template_name = 'films/return_movie.html'
+    success_url = reverse_lazy('films:index')
 
     def form_valid(self, form):
         rental = form.save(commit=False)
-        rental.actual_return = timezone.now()
+        rental.actual_return = datetime.now()
         rental.save()
 
-        item_to_return = Item.objects.get(id=self.object.item.id)
-        item_to_return.item_state = ItemState.objects.get(name='Available')
-        item_to_return.save()
+        self.object.item.item_state = ItemState.objects.get(name='Available')
+        self.object.item.save()
 
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-
-        return dict(
-            super().get_context_data(**kwargs),
-            rental_price=calculate_rental_fee(self.object))
-
-    def get_success_url(self):
-        return reverse('films:index')
-        
-    
-
-    
+        return HttpResponseRedirect(self.success_url)
 
 
-
-
-    
-# class ReturnFilm(FormView):
-#     model = Rent
-#     form_class = RentalReturnFilmForm
-#     template_name = 'films/return_movie.html'
-#     success_url = 'films/index.html'
+class HomeAdmin(ListView):
+    model = Film
+    template_name = 'administrator/home.html'

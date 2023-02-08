@@ -5,7 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ object.original_title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+        h4 {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        h6 {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        img {
+            margin-top: 50px;
+        }
+        ul#genre li {
+            display:inline;
+        }
+    </style>
 </head>
 <body>
     {% block body %}
@@ -20,39 +44,113 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <h1>{{ object.original_title }}</h1>
-                <h4>
-                    {% for genre in object.genre.all %}
-                        {{ genre }} 
-                    {% endfor %}
-                </h4>
-                <h6>{{ object.description }}</h6>
-
-                <h6>
-                    {% for actors in object.actor.all %} 
-                        {{ actors }}
-                    {% endfor %}
-                </h6>
-                
-                {% if object.is_item_available <= 0 %}
-                    <div class="card-text">No item available</div>
-                {% else %}
-                    <a class="btn btn-warning" href="{% url 'films:rent' object.id %}">Rent</a>
-                {% endif %}
-
-                {{ object.verify_stock }}
-                {{ object.is_item_available }}
-
-                {% for x in object.item_set.all %}
-                    <div>{{ x.is_available }}</div>
+                <div class="col-md-6">
+            <h1>{{ object.original_title }}</h1>
+                <div class="border-top pt-3">
+            <h4>
+                {% for genre in object.genre.all %}
+                    {{ genre }}
                 {% endfor %}
-                
-            </div>
-            </div>
+            </h4>
+                <div class="border-top pt-3">
+            <h6>{{ object.description }}</h6>
+                <div class="border-top pt-3">
+            <h6>
+                {% for actors in object.actor.all %}
+                    {{ actors }}
+                {% endfor %}
+            </h6>
+
+            {% if object.is_item_available <= 0 %}
+                <div class="card-text">No item available :(</div>
+            {% else %}
+                <a class="btn btn-warning" href="{% url 'films:rent' object.id %}">Rent</a>
+            {% endif %}
+
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#{% extends 'base/base.html' %}#}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Document</title>#}
+{#</head>#}
+{#<body>#}
+{#    {% block body %}#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col-md-6">#}
+{#                <div class="row">#}
+{#                    <div class="col-md-12">#}
+{#                        {% if object.image %}#}
+{#                        <img height="500px" src="{{ object.image.url }}" class="rounded mx-auto d-block"/>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="col-md-6">#}
+{#                <h1>{{ object.original_title }}</h1>#}
+{#                <h4>#}
+{#                    {% for genre in object.genre.all %}#}
+{#                        {{ genre }} #}
+{#                    {% endfor %}#}
+{#                </h4>#}
+{#                <h6>{{ object.description }}</h6>#}
+{##}
+{#                <h6>#}
+{#                    {% for actors in object.actor.all %} #}
+{#                        {{ actors }}#}
+{#                    {% endfor %}#}
+{#                </h6>#}
+{#                #}
+{#                {% if object.is_item_available <= 0 %}#}
+{#                    <div class="card-text">No item available :(</div>#}
+{#                {% else %}#}
+{#                    <a class="btn btn-warning" href="{% url 'films:rent' object.id %}">Rent</a>#}
+{#                {% endif %}#}
+{##}
+{#                {{ object.verify_stock }}#}
+{#                {{ object.is_item_available }}#}
+{##}
+{#                {% for x in object.item_set.all %}#}
+{#                    <div>{{ x.is_available }}</div>#}
+{#                {% endfor %}#}
+{#                #}
+{#            </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    {% endblock %}#}
+{#</body>#}
+{#</html>#}

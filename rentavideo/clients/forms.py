@@ -9,6 +9,21 @@ from django.contrib.auth.forms import UserCreationForm
 
 class ClientSignUpForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(ClientSignUpForm, self).__init__(*args, **kwargs)
+        try:
+            usuario = kwargs.get('instance').user
+            self.fields['username'].initial = usuario.username
+            self.fields['first_name'].initial = usuario.first_name
+            self.fields['last_name'].initial = usuario.last_name
+            self.fields['email'].initial = usuario.email
+        except:
+            self.fields['username'].initial = None
+            self.fields['first_name'].initial = None
+            self.fields['last_name'].initial = None
+            self.fields['email'].initial = None
+
+
     username = forms.CharField(max_length=100, widget=forms.TextInput(
         attrs={'class': 'form-control'}), label="Your Username")
 
@@ -46,7 +61,7 @@ class ClientSignUpForm(forms.ModelForm):
     password2 = forms.CharField(
         strip=False,
         widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
+            attrs={'class': 'form-control', 'autocomplete': 'new-password', 'placeholder': 'Repeat the password above'}),
         label="Confirm your Password"
     )
 

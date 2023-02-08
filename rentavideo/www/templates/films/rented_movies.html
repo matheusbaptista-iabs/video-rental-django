@@ -6,43 +6,85 @@
         <div class="col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header text-white bg-info">
-                    <div class="card-title">
-                        Movies rented by {{ user.username }}
-                    </div>
+                    <h5 class="card-title">Movies rented by {{ user.first_name }}</h5>
                 </div>
                 <div class="card-body">
                 {% if object_list %}
-                    <div class="container">
-                        <div class="row align-items-center">
-
-                            <div class="col-sm">
-                                {% for video in object_list %}
-                                    <li>{{ video.item }}</li>
-                            </div>
-
-                            <div class="col-sm">
-                                <a class="btn btn-warning" href="{% url 'films:return_movie' video.id %}">Return</a>
-                            </div>
-
-                                {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
+                    <table class="table">
+                        <tbody>
+                            {% for video in object_list %}
+                                <tr>
+                                    <td>{{ video.item }}</td>
+                                    <td>
+                                        <a class="btn btn-warning" href="{% url 'films:return_movie' video.id %}">Return</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
-
-                    <p> Hey {{ user.username }}! You have not rented any videos.</p>
-
+                    <p class="text-center"> Hey {{ user.first_name }}! You have not rented any videos!</p>
+                    <div class="col-md-12 text-center">
+                        <a class="btn btn-warning" href="{% url 'films:index' %}">Main Page</a>
+                    </div>
                 {% endif %}
-
-{#                    {% for film in object_list %}#}
-{#                        {{ film.item }}#}
-{#                    {% empty %}#}
-{#                        <p>{{ user.username }} has not rented any videos.</p>#}
-{#                    {% endfor %}#}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 {% endblock %}
+
+
+
+
+{#{% extends 'base/base.html' %}#}
+{#{% block body %}#}
+{##}
+{#<div class="container">#}
+{#    <div class="row">#}
+{#        <div class="col-md-8 offset-md-2">#}
+{#            <div class="card">#}
+{#                <div class="card-header text-white bg-info">#}
+{#                    <div class="card-title">#}
+{#                        Movies rented by {{ user.username }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                {% if object_list %}#}
+{#                    <div class="container">#}
+{#                        <div class="row align-items-center">#}
+{##}
+{#                            <div class="col-sm">#}
+{#                                {% for video in object_list %}#}
+{#                                    <li>{{ video.item }}</li>#}
+{#                            </div>#}
+{##}
+{#                            <div class="col-sm">#}
+{#                                <a class="btn btn-warning" href="{% url 'films:return_movie' video.id %}">Return</a>#}
+{#                            </div>#}
+{##}
+{#                                {% endfor %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                {% else %}#}
+{##}
+{#                    <p> Hey {{ user.username }}! You have not rented any videos.</p>#}
+{##}
+{#                {% endif %}#}
+{##}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#{% endblock %}#}
+
+{#                    {% for film in object_list %}#}
+{#                        {{ film.item }}#}
+{#                    {% empty %}#}
+{#                        <p>{{ user.username }} has not rented any videos.</p>#}
+{#                    {% endfor %}#}
