@@ -124,6 +124,9 @@ class Rent(models.Model):
     actual_return = models.DateTimeField(null=True, blank=True)
 
     def calculate_rental_fee(self):
+        if self.actual_return:
+            return 10
+
         rental_period = timezone.now() - self.date_rent
         base_fee = 10
         extra_fee = 2 * (rental_period.days - 3)
@@ -132,29 +135,17 @@ class Rent(models.Model):
         rental_fee = base_fee + extra_fee
         return rental_fee
 
+    def is_overdue(self):
+        if self.actual_return is None and timezone.now() > (self.date_rent + timedelta(days=3)):
+            return True
+        else:
+            return False
 
+    def get_return_status(self):
+        if self.actual_return:
+            return 'Returned on ' + self.actual_return.strftime('%m/%d/%Y')
+        elif self.is_overdue():
+            return 'Overdue'
+        else:
+            return 'Not returned yet'
 
-
-
-    #     rental_price = self.item.media_type.rental_price
-
-    #     if self.item.calculate_rental_price():
-    #         rental_price = rental_price * 1.5
-            
-    #         if (date_return - date_rent).days / 3:
-    #             return rental_price * 10 * (date_return - date_rent).days / 3
-            
-    #         predicted_return_date = abs((date_return - date_rent).days)
-    #         return_date = rental_price * new_rental_count
-            
-    #     else:
-            
-            
-
-    #     return rental_price 
-        
-        
-        
-      
-    
-    # def is_delaied(...) #multa

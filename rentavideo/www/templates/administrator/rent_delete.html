@@ -1,0 +1,13 @@
+{% extends 'administrator/base.html' %}
+
+{% block content %}
+    <h1>Delete Rent Item</h1>
+
+    <p>Are you sure you want to delete "{{ object.item }}" rented by "{{ object.user }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+        <a href="{% url 'home_admin' %}">Cancel</a>
+    </form>
+{% endblock %}

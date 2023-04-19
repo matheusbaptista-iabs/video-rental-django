@@ -14,6 +14,8 @@ urlpatterns = [
     path('rentals/', views.RentedVideosByClientView.as_view(), name='rentals_by_client'),
     path('rentals/<int:pk>/return/', views.ReturnMovieView.as_view(), name='return_movie'),
 
-    path('home/admin', views.CreateFilm.as_view(), name='create'),
+    path('home/admin/', views.HomeAdminView.as_view(), name='home_admin'),
+    path('home/admin/rent/<int:pk>/detail/', views.RentDetailView.as_view(), name='rent_detail'),
+    path('home/admin/rent/<int:pk>/delete/', views.RentDeleteView.as_view(), name='rent_delete'),
 
 ]

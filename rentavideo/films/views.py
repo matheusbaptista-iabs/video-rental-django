@@ -6,6 +6,10 @@ from films.forms import FilmForm, RentalFilmForm, RentalReturnFilmForm
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, FormView, TemplateView
 from django.urls import reverse, reverse_lazy
 
+from django_tables2 import SingleTableView
+from .tables import RentTable
+
+
 # Create your views here.
 
 class IndexFilm(ListView):
@@ -29,7 +33,6 @@ class CreateFilm(CreateView):
         self.object = form.save(commit=False)
         self.object.save()
         return super().form_valid(form)
-    
 
 
 class UpdateFilm(UpdateView):
@@ -37,7 +40,7 @@ class UpdateFilm(UpdateView):
     form_class = FilmForm
     template_name = 'films/update.html'
     success_url = 'films/create.html'
-    
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
@@ -49,8 +52,8 @@ class DeleteFilm(DeleteView):
     form_class = FilmForm
     template_name = 'films/delete.html'
     success_url = 'films/index.html'
-    
-    
+
+
 class RentFilm(PermissionRequiredMixin, CreateView):
     model = Rent
     form_class = RentalFilmForm
@@ -102,6 +105,47 @@ class ReturnMovieView(UpdateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class HomeAdmin(ListView):
-    model = Film
-    template_name = 'administrator/home.html'
+""" Admin section """
+
+
+class HomeAdminView(SingleTableView):
+    table_class = RentTable
+    queryset = Rent.objects.all()
+    template_name = 'administrator/index.html'
+    paginate_by = 7
+
+
+class RentDetailView(DetailView):
+    model = Rent
+    template_name = 'administrator/rent_detail.html'
+    pk_url_kwarg = 'pk'
+
+    def get_object(self, queryset=None):
+        self.object = Rent.objects.get(id=self.kwargs['pk'])
+        return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        rent = self.get_object()
+        context['total_price'] = rent.calculate_rental_fee()
+        import pdb;pdb.set_trace()
+
+        # Get user's personal details
+        user = rent.user
+        context['user_name'] = user.get_full_name()
+        context['user_email'] = user.email
+
+        # Get user's rental history
+        rental_history = Rent.objects.filter(user=user).values('item__film__original_title', 'date_rent',
+                                                               'actual_return')
+        context['rental_history'] = rental_history
+        # rental_history = Rent.objects.filter(user=user)
+        # context['rental_history'] = rental_history
+
+        return context
+
+
+class RentDeleteView(DeleteView):
+    model = Rent
+    success_url = reverse_lazy('films:home_admin')
+    template_name = 'administrator/rent_delete.html'

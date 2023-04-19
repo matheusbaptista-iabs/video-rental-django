@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'django_tables2',
     'films',
     'clients',
 ]
@@ -137,3 +138,5 @@ LOGOUT_REDIRECT_URL = 'clients:login'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap4.html'
